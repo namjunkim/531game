@@ -2,6 +2,8 @@ import pygame
 import random
 import sys
 import time
+import Emeny
+import Player
 
 # 초기화
 pygame.init()
@@ -22,18 +24,23 @@ player_speed = 5
 bullet_speed = 10
 enemy_speed = 2
 
-# 플레이어 설정
-#player = pygame.Rect(screen_width // 2, screen_height - 50, 50, 50)
 # 플레이어 이미지 로드
-player = pygame.image.load('image/531_plane.png')  # 'player.png'는 사용할 이미지 파일의 이름입니다.
-player = pygame.transform.scale(player, (40, 40))  # 이미지 크기 조정
-player_rect = player.get_rect()
+player = Player.Player(player_img_path = 'image/531_plane.png', player_score = 10,
+                       player_height = 40, player_length = 40, player_power = 0,
+                       player_bullet_per_amount = 0, player_bullet_img_path = '',
+                       player_bullet = '')
+player_img = player.make_player_img()
+player_rect = player.make_player_rect(player_img)
 player_rect.topleft = (screen_width // 2, screen_height - 70)  # 플레이어 초기 위치
 
 # 적 이미지 로드
-enemy = pygame.image.load('image/enemy.png')  # 'player.png'는 사용할 이미지 파일의 이름입니다.
-enemy = pygame.transform.scale(enemy, (40, 40))  # 이미지 크기 조정
-enemy_rect = enemy.get_rect()
+enemy_chaebae = Emeny.Enemy(enemy_img_path = 'image/enemy.png', enemy_score = 10,
+                    enemy_height = 40, enemy_length = 40, enemy_power = 0,
+                    enemy_bullet_per_amount = 0, enemy_bullet_img_path = '',
+                    enemy_bullet = '')
+enemy_img = enemy_chaebae.make_enemy_img()
+enemy_rect = enemy_chaebae.make_enemy_rect(enemy_img)
+
 
 # 총알 및 적 리스트
 bullets = []
@@ -99,7 +106,7 @@ while running:
             if bullet.colliderect(enemy_rect):
                 bullets.remove(bullet)
                 enemies.remove(enemy_rect)
-                score =  score + 10
+                score =  score + enemy_chaebae.enemy_score
                 break
 
     # 적 충돌
@@ -136,10 +143,10 @@ while running:
     for bullet in bullets:
         pygame.draw.rect(screen, white, bullet)
     for enemy_rect in enemies:
-        screen.blit(enemy, enemy_rect)
+        screen.blit(enemy_img, enemy_rect)
 
 
-    screen.blit(player, player_rect)
+    screen.blit(player_img, player_rect)
 
     pygame.display.flip()
     clock.tick(60)
