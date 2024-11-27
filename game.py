@@ -2,6 +2,8 @@ import pygame
 import random
 import sys
 import time
+
+import Background
 import Emeny
 import Player
 
@@ -13,8 +15,9 @@ pygame.mixer.music.load('sound/back_sound_1.wav')  # 배경 음악 파일명
 pygame.mixer.music.play(-1)  # 음악을 무한 반복 재생
 
 # 화면 설정
-screen_width, screen_height = 800, 600
-screen = pygame.display.set_mode((screen_width, screen_height))
+background = Background.Background(background_music = 'sound/back_sound_1.wav', screen_width=800, screen_height=600)
+background.run_background_music()
+screen = background.set_background_screen()
 pygame.display.set_caption("Simple Shooting Game")
 
 # 색상 및 속도
@@ -31,7 +34,7 @@ player = Player.Player(player_img_path = 'image/531_plane.png', player_score = 1
                        player_bullet = '')
 player_img = player.make_player_img()
 player_rect = player.make_player_rect(player_img)
-player_rect.topleft = (screen_width // 2, screen_height - 70)  # 플레이어 초기 위치
+player_rect.topleft = (background.screen_width // 2, background.screen_height - 70)  # 플레이어 초기 위치
 
 # 적 이미지 로드
 enemy_chaebae = Emeny.Enemy(enemy_img_path = 'image/enemy.png', enemy_score = 10,
@@ -40,6 +43,8 @@ enemy_chaebae = Emeny.Enemy(enemy_img_path = 'image/enemy.png', enemy_score = 10
                     enemy_bullet = '')
 enemy_img = enemy_chaebae.make_enemy_img()
 enemy_rect = enemy_chaebae.make_enemy_rect(enemy_img)
+
+
 
 
 # 총알 및 적 리스트
@@ -70,11 +75,11 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player_rect.left > 0 and alive:
         player_rect.x -= player_speed
-    if keys[pygame.K_RIGHT] and player_rect.right < screen_width and alive:
+    if keys[pygame.K_RIGHT] and player_rect.right < background.screen_width and alive:
         player_rect.x += player_speed
     if keys[pygame.K_UP] and player_rect.right > 0 and alive:
         player_rect.y -= player_speed
-    if keys[pygame.K_DOWN] and player_rect.right < screen_height and alive:
+    if keys[pygame.K_DOWN] and player_rect.right < background.screen_height and alive:
         player_rect.y += player_speed
     if keys[pygame.K_SPACE] and alive:
         bullet = pygame.Rect(player_rect.centerx - 5, player_rect.top - 10, 3, 3)
@@ -83,7 +88,7 @@ while running:
 
     # 적 생성
     if pygame.time.get_ticks() - last_enemy_spawn > enemy_spawn_time:
-        enemy_x = random.randint(0, screen_width - 50)
+        enemy_x = random.randint(0, background.screen_width - 50)
         enemy_rect = pygame.Rect(enemy_x, 0, 40, 40)
         enemies.append(enemy_rect)
         last_enemy_spawn = pygame.time.get_ticks()
@@ -97,7 +102,7 @@ while running:
     # 적 이동
     for enemy_rect in enemies[:]:
         enemy_rect.y += enemy_speed
-        if enemy_rect.top > screen_height:
+        if enemy_rect.top > background.screen_height:
             enemies.remove(enemy_rect)
 
     # 충돌 체크
@@ -132,12 +137,12 @@ while running:
 
     font = pygame.font.Font(None, 23)
     text = font.render(f"Elapsed Time: {elapsed_time_seconds:.2f} sec", True, white)
-    text_rect = text.get_rect(center=(screen_width - 90, screen_height - 580))
+    text_rect = text.get_rect(center=(background.screen_width - 90, background.screen_height - 580))
     screen.blit(text, text_rect)
 
     score_font = pygame.font.Font(None, 40)
     score_text = score_font.render(str(score), True, white)
-    score_rect = score_text.get_rect(center=(screen_width - 750, screen_height - 580))
+    score_rect = score_text.get_rect(center=(background.screen_width - 750, background.screen_height - 580))
     screen.blit(score_text, score_rect)
 
     for bullet in bullets:
