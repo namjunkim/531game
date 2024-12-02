@@ -10,6 +10,10 @@ import Player
 # 초기화
 #pygame.init()
 def run_game() :
+
+    #재배맨 저항력
+    endurance_count = 5
+
     # 배경 음악 로드
     pygame.mixer.music.load('sound/back_sound_1.wav')  # 배경 음악 파일명
     pygame.mixer.music.play(-1)  # 음악을 무한 반복 재생
@@ -18,7 +22,7 @@ def run_game() :
     background = Background.Background(background_music = 'sound/back_sound_1.wav', screen_width=800, screen_height=600)
     background.run_background_music()
     screen = background.set_background_screen()
-    pygame.display.set_caption("Simple Shooting Game")
+    pygame.display.set_caption("531 Shooting Game")
 
     # 색상 및 속도
     white = (255, 255, 255)
@@ -84,9 +88,21 @@ def run_game() :
         if keys[pygame.K_SPACE] and alive:
             bullet = pygame.Rect(player_rect.centerx - 5, player_rect.top - 10, 3, 3)
             pygame.mixer.Sound('sound/shoot.wav').play()
-            bullets.append(bullet)
+            if(len(bullets) < 15):
+                bullets.append(bullet)
 
         # 적 생성
+        if elapsed_time_seconds > 20:
+            enemy_spawn_time = 1000
+        elif elapsed_time_seconds > 40:
+            enemy_spawn_time = 500
+        elif elapsed_time_seconds > 60:
+            enemy_spawn_time = 300
+        elif elapsed_time_seconds > 90:
+            enemy_spawn_time = 150
+        elif elapsed_time_seconds > 120:
+            enemy_spawn_time = 50
+
         if pygame.time.get_ticks() - last_enemy_spawn > enemy_spawn_time:
             enemy_x = random.randint(0, background.screen_width - 50)
             enemy_rect = pygame.Rect(enemy_x, 0, 40, 40)
@@ -103,7 +119,19 @@ def run_game() :
         for enemy_rect in enemies[:]:
             enemy_rect.y += enemy_speed
             if enemy_rect.top > background.screen_height:
+                endurance_count = endurance_count - 1
                 enemies.remove(enemy_rect)
+                if(endurance_count <= 0):
+                    life_font = pygame.font.Font(None, 40)
+                    life_text = life_font.render( "0 / 5", True, white)
+                    life_rect = life_text.get_rect(center=(background.screen_width / 2, background.screen_height - 580))
+                    screen.blit(life_text, life_rect)
+                    pygame.mixer.music.stop()
+                    alive = False
+                    pygame.mixer.Sound('sound/dead_sound.wav').play()
+                    time.sleep(3.8)
+                    pygame.quit()
+
 
         # 충돌 체크
         for bullet in bullets[:]:
@@ -144,6 +172,11 @@ def run_game() :
         score_text = score_font.render(str(score), True, white)
         score_rect = score_text.get_rect(center=(background.screen_width - 750, background.screen_height - 580))
         screen.blit(score_text, score_rect)
+
+        life_font = pygame.font.Font(None, 40)
+        life_text = life_font.render(str(endurance_count) + " / 5", True, white)
+        life_rect = life_text.get_rect(center=(background.screen_width / 2, background.screen_height - 580))
+        screen.blit(life_text, life_rect)
 
         for bullet in bullets:
             pygame.draw.rect(screen, white, bullet)

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import game
+import intro
 
 # 초기화
 pygame.init()
@@ -43,6 +44,7 @@ def start_game():
 
 def open_settings():
     print("Settings Opened")
+    intro.intro_game()
     # 이후 설정 화면 코드 위치
 
 def quit_game():
@@ -59,7 +61,7 @@ while running:
     # 메뉴 화면 그리기
     screen.fill(grey)  # 배경색 설정
     draw_button("Start", 350, 200, 100, 50, white, (200, 200, 200), start_game)
-    #draw_button("Settings", 350, 300, 100, 50, white, (200, 200, 200), open_settings)
+    draw_button("Intro", 350, 300, 100, 50, white, (200, 200, 200), open_settings)
     draw_button("Quit", 350, 400, 100, 50, white, (200, 200, 200), quit_game)
 
     pygame.display.flip()  # 화면 업데이트
