@@ -59,10 +59,18 @@ while running:
             running = False
 
     # 메뉴 화면 그리기
-    screen.fill(grey)  # 배경색 설정
+    #screen.fill(grey)  # 배경색 설정
+    background_img = pygame.image.load("image/lee.jpeg")
+    background_img = pygame.transform.scale(background_img, (800, 600))
+    background_rect = background_img.get_rect()
+
+    screen.blit(background_img, background_rect)
+
     draw_button("Start", 350, 200, 100, 50, white, (200, 200, 200), start_game)
     draw_button("Intro", 350, 300, 100, 50, white, (200, 200, 200), open_settings)
     draw_button("Quit", 350, 400, 100, 50, white, (200, 200, 200), quit_game)
+
+
 
     pygame.display.flip()  # 화면 업데이트
     pygame.time.Clock().tick(60)  # FPS 설정

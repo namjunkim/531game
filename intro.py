@@ -15,6 +15,13 @@ def intro_game():
     background = Background.Background(background_music='sound/intro.wav', screen_width=800, screen_height=600)
     background.run_background_music()
     screen = background.set_background_screen()
+
+    background_img = pygame.image.load("image/intro_back.webp")
+    background_img = pygame.transform.scale(background_img, (800, 600))
+    background_rect = background_img.get_rect()
+
+    screen.blit(background_img, background_rect)
+
     pygame.display.set_caption("531 Shooting Game")
 
     # 한국어 폰트 설정 (프로젝트에 있는 폰트 파일이름으로 지정)
@@ -64,8 +71,11 @@ def intro_game():
         # 화면 지우기
         #screen.fill(black)
 
+
+
         rendered_text = font.render(intro_list[cnt], True, white)
         screen.blit(rendered_text, (10, 50 * cnt + 10))
+
 
         pygame.display.flip()
         clock.tick(60)
