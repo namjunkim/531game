@@ -130,7 +130,8 @@ def run_game() :
                     alive = False
                     pygame.mixer.Sound('sound/dead_sound.wav').play()
                     time.sleep(3.8)
-                    pygame.quit()
+                    #pygame.quit()
+                    return
 
 
         # 충돌 체크
@@ -149,7 +150,8 @@ def run_game() :
                 alive = False
                 pygame.mixer.Sound('sound/dead_sound.wav').play()
                 time.sleep(3.8)
-                pygame.quit()
+                #pygame.quit()
+                return
 
 
         # 화면 그리기
@@ -189,5 +191,5 @@ def run_game() :
         pygame.display.flip()
         clock.tick(60)
 
-    pygame.quit()
-    sys.exit()
+    #pygame.quit()
+    #sys.exit()
